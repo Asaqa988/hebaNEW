@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareerAK - AI Grammar Improvement</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      max-width: 600px;
+    }
+    textarea, input {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .output {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      background: #f9f9f9;
+    }
+  </style>
+</head>
+<body>
+  <h1>AI Grammar Improvement</h1>
+  <form id="textForm">
+    <textarea id="userInput" placeholder="Enter text to improve" rows="5"></textarea>
+    <button type="submit">Improve Text</button>
+  </form>
+  <div class="output">
+    <h2>Improved Text:</h2>
+    <p id="response"></p>
+  </div>
+  <script>
+    const form = document.getElementById("textForm");
+    const responseField = document.getElementById("response");
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const userInput = document.getElementById("userInput").value;
+
+      // Clear the response field
+      responseField.textContent = "Processing...";
+
+      try {
+        const response = await fetch("http://localhost:3000/improve", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ text: userInput }),
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          responseField.textContent = result.improvedText;
+        } else {
+          responseField.textContent = `Error: ${result.error}`;
+        }
+      } catch (error) {
+        responseField.textContent = "An error occurred while processing your request.";
+      }
+    });
+  </script>
+</body>
+</html>
